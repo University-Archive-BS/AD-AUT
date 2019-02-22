@@ -6,7 +6,7 @@ def nearest_neighbor():
     points[0][2] = 1
     present_point = 0
     result_path = [present_point + 1]
-    while np.sum(points, axis=0)[2] != n:
+    for i in range(n - 1):
         present_point = find_next_nearest_neighbor(present_point)
         points[present_point][2] = 1
         result_path.append(present_point + 1)
