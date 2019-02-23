@@ -19,6 +19,5 @@ def selection_sort(an_array):
     return an_array
 
 
-print(selection_sort([2, 3, 5, 6]))
 
 
