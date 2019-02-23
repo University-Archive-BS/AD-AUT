@@ -46,4 +46,3 @@ f = open("points.txt", "r")
 n = int(f.readline())
 points = fill_array_by_file(f)
 print(nearest_neighbor())
-

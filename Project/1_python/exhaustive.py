@@ -12,7 +12,9 @@ def exhaustive():
         if d < cost:
             cost = d
             result_path = permutation
-    return result_path
+    for i in range(n):
+        print(str(i + 1) + '. ' + str(points[int(result_path[i])][0]) + ', ' + str(points[int(result_path[i])][1]))
+    return cost
 
 
 def calculate_path_cost(permutation_string):
@@ -21,6 +23,9 @@ def calculate_path_cost(permutation_string):
         this_cost += hp(
             points[int(permutation_string[character + 1])][0] - points[int(permutation_string[character])][0],
             points[int(permutation_string[character + 1])][1] - points[int(permutation_string[character])][1])
+    this_cost += hp(
+            points[int(permutation_string[0])][0] - points[int(permutation_string[n - 1])][0],
+            points[int(permutation_string[0])][1] - points[int(permutation_string[n - 1])][1])
     return this_cost
 
 
@@ -37,5 +42,4 @@ f = open("points.txt", "r")
 n = int(f.readline())
 label_points = np.arange(n)
 points = fill_array_by_file(f)
-result = exhaustive()
-print(result)
+print(exhaustive())
