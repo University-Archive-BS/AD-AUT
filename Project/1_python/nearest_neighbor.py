@@ -1,5 +1,6 @@
 import numpy as np
 from math import hypot as hp
+import timeit
 
 
 def nearest_neighbor():
@@ -42,7 +43,11 @@ def fill_array_by_file(file):
     return vertices
 
 
+start = timeit.default_timer()
 f = open("points.txt", "r")
 n = int(f.readline())
 points = fill_array_by_file(f)
 print(nearest_neighbor())
+stop = timeit.default_timer()
+print('Time: ', (stop - start) * 1000000)
+

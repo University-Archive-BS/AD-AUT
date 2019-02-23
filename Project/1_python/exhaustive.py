@@ -1,6 +1,7 @@
 import numpy as np
 from math import hypot as hp
 import itertools
+import timeit
 
 
 def exhaustive():
@@ -38,8 +39,12 @@ def fill_array_by_file(file):
     return vertices
 
 
-f = open("points.txt", "r")
+start = timeit.default_timer()
+f = open("random4.txt", "r")
 n = int(f.readline())
 label_points = np.arange(n)
 points = fill_array_by_file(f)
 print(exhaustive())
+stop = timeit.default_timer()
+print('Time: ', (stop - start) * 1000000)
+
