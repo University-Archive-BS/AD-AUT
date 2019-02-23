@@ -24,8 +24,8 @@ def calculate_path_cost(permutation_string):
             points[int(permutation_string[character + 1])][0] - points[int(permutation_string[character])][0],
             points[int(permutation_string[character + 1])][1] - points[int(permutation_string[character])][1])
     this_cost += hp(
-            points[int(permutation_string[0])][0] - points[int(permutation_string[n - 1])][0],
-            points[int(permutation_string[0])][1] - points[int(permutation_string[n - 1])][1])
+        points[int(permutation_string[0])][0] - points[int(permutation_string[n - 1])][0],
+        points[int(permutation_string[0])][1] - points[int(permutation_string[n - 1])][1])
     return this_cost
 
 
