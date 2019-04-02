@@ -44,7 +44,7 @@ def fill_array_by_file(file):
 
 
 start = timeit.default_timer()
-f = open("points.txt", "r")
+f = open("input1copy.txt", "r")
 n = int(f.readline())
 points = fill_array_by_file(f)
 print(nearest_neighbor())

@@ -40,7 +40,7 @@ def fill_array_by_file(file):
 
 
 start = timeit.default_timer()
-f = open("random4.txt", "r")
+f = open("input1copy.txt", "r")
 n = int(f.readline())
 label_points = np.arange(n)
 points = fill_array_by_file(f)
