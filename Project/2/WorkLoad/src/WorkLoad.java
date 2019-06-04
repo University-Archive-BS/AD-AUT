@@ -3,6 +3,12 @@ import java.util.ArrayList;
 
 public class WorkLoad
 {
+
+
+    private static final int JOB_SORT_WAYS = 12;
+    private static final int WORKSTATION_SORT_WAYS = 8;
+
+
     public static void main(String[] args)
     {
         ArrayList<Integer> inputs = readFile("input.txt");
@@ -10,60 +16,161 @@ public class WorkLoad
         int n = inputs.get(0); // number of jobs
         int m = inputs.get(1); // number of workStations
 
-        Job[] jobs1 = new Job[n];
-        Job[] jobs2 = new Job[n];
-        Job[] jobs3 = new Job[n];
+        Job[] jobs = new Job[n];
 
         for (int i = 0; i < n; i++)
         {
             int startTimeAccess = inputs.get(i * (m + 1) + 2);
-            Task[] tasks1 = new Task[m];
-            Task[] tasks2 = new Task[m];
-            Task[] tasks3 = new Task[m];
+            Task[] tasks = new Task[m];
             for (int j = 0; j < m; j++)
             {
-                tasks1[j] = new Task(inputs.get(i * (m + 1) + j + 3));
-                tasks2[j] = new Task(inputs.get(i * (m + 1) + j + 3));
-                tasks3[j] = new Task(inputs.get(i * (m + 1) + j + 3));
+                tasks[j] = new Task(inputs.get(i * (m + 1) + j + 3));
             }
-            jobs1[i] = new Job(startTimeAccess, tasks1, i + 1);
-            jobs2[i] = new Job(startTimeAccess, tasks2, i + 1);
-            jobs3[i] = new Job(startTimeAccess, tasks3, i + 1);
+            jobs[i] = new Job(startTimeAccess, tasks, i + 1);
         }
 
-        Job[][] sortedJob1 = new Job[3][n];
-        Job[][] sortedJob2 = new Job[3][n];
-        Job[][] sortedJob3 = new Job[3][n];
+        int min = -1;
+        WorkStation[] resultWorkStation = null;
+        for (int i = 0; i < JOB_SORT_WAYS; i++)
+        {
+            WorkStation[][] workStationsSet = findResults(i + 1, jobs, m, n);
+
+            int minRes = findResult(workStationsSet[0], n);
+            int indexMin = 0;
+            for (int j = 1; j < workStationsSet.length; j++)
+            {
+                int tmp = findResult(workStationsSet[j], n);
+                if (tmp < minRes)
+                {
+                    minRes = tmp;
+                    indexMin = j;
+                }
+            }
+
+            if (minRes < min || min == -1)
+            {
+                min = minRes;
+                resultWorkStation = workStationsSet[indexMin];
+            }
+
+        }
+
+        printResult(resultWorkStation, n);      // Show in console
+        writeInFile("output.txt", resultWorkStation, n); // print in File
+    }
+
+    private static Job[] resetJob(Job[] jobs)
+    {
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int i1 = 0; i1 < jobs[i].getTasks().length; i1++)
+            {
+                jobs[i].getTasks()[i1].setHasDone(false);
+            }
+        }
+        return jobs;
+    }
+
+    private static WorkStation[][] findResults(int indexSort, Job[] jobs, int m, int n)
+    {
+
+        Job[] jobs1 = jobs.clone();
+
+        Job[][] sortedJob1 = new Job[m][n];
+
         for (int i = 0; i < m; i++)
         {
-            sortedJob1[i] = Job.sortJob(jobs1, i);
-            sortedJob2[i] = Job.sortJob(jobs2, i);
-            sortedJob3[i] = Job.sortJob(jobs3, i);
-        }
-
-        Factory factory = new Factory(m, sortedJob1, 1);
-        Factory factory2 = new Factory(m, sortedJob2, 2);
-        Factory factory3 = new Factory(m, sortedJob3, 3);
-
-
-        WorkStation[][] workStationsSet = new WorkStation[3][m];
-        workStationsSet[0] = factory.process();
-        workStationsSet[1] = factory2.process();
-        workStationsSet[2] = factory3.process();
-
-        int minRes = findResult(workStationsSet[0], n);
-        int indexMin = 0;
-        for (int i = 1; i < workStationsSet.length; i++)
-        {
-            int tmp = findResult(workStationsSet[i], n);
-            if (tmp < minRes)
+            if (indexSort == 1)
             {
-                minRes = tmp;
-                indexMin = i;
+                sortedJob1[i] = Job.sortJob1(jobs1, i);
+            }
+            if (indexSort == 2)
+            {
+                sortedJob1[i] = Job.sortJob2(jobs1, i);
+            }
+            if (indexSort == 3)
+            {
+                sortedJob1[i] = Job.sortJob3(jobs1, i);
+            }
+            if (indexSort == 4)
+            {
+                sortedJob1[i] = Job.sortJob4(jobs1, i);
+            }
+            if (indexSort == 5)
+            {
+                sortedJob1[i] = Job.sortJob5(jobs1, i);
+            }
+            if (indexSort == 6)
+            {
+                sortedJob1[i] = Job.sortJob6(jobs1, i);
+            }
+            if (indexSort == 7)
+            {
+                sortedJob1[i] = Job.sortJob7(jobs1, i);
+            }
+            if (indexSort == 8)
+            {
+                sortedJob1[i] = Job.sortJob8(jobs1, i);
+            }
+            if (indexSort == 9)
+            {
+                sortedJob1[i] = Job.sortJob9(jobs1, i);
+            }
+            if (indexSort == 10)
+            {
+                sortedJob1[i] = Job.sortJob10(jobs1, i);
+            }
+            if (indexSort == 11)
+            {
+                sortedJob1[i] = Job.sortJob11(jobs1, i);
+            }
+            if (indexSort == 12)
+            {
+                sortedJob1[i] = Job.sortJob12(jobs1, i);
             }
         }
-//        printResult(workStationsSet[indexMin], n);      // Show in console
-        writeInFile("output.txt", workStationsSet[indexMin], n); // print in File
+        WorkStation[][] workStationsSet = new WorkStation[WORKSTATION_SORT_WAYS][m];
+
+        Factory factory1 = new Factory(m, sortedJob1, 1);
+
+        workStationsSet[0] = factory1.proccess();
+        resetJob(sortedJob1[0]);
+        Factory factory2 = new Factory(m, sortedJob1, 2);
+
+        workStationsSet[1] = factory2.proccess();
+        resetJob(sortedJob1[0]);
+
+        Factory factory3 = new Factory(m, sortedJob1, 3);
+
+        workStationsSet[2] = factory3.proccess();
+        resetJob(sortedJob1[0]);
+
+
+        Factory factory4 = new Factory(m, sortedJob1, 4);
+
+        workStationsSet[3] = factory4.proccess();
+        resetJob(sortedJob1[0]);
+        Factory factory5 = new Factory(m, sortedJob1, 5);
+
+        workStationsSet[4] = factory5.proccess();
+        resetJob(sortedJob1[0]);
+
+        Factory factory6 = new Factory(m, sortedJob1, 6);
+
+        workStationsSet[5] = factory6.proccess();
+        resetJob(sortedJob1[0]);
+
+        Factory factory7 = new Factory(m, sortedJob1, 7);
+
+        workStationsSet[6] = factory7.proccess();
+        resetJob(sortedJob1[0]);
+
+        Factory factory8 = new Factory(m, sortedJob1, 8);
+
+        workStationsSet[7] = factory8.proccess();
+        resetJob(sortedJob1[0]);
+
+        return workStationsSet;
     }
 
     public static void writeInFile(String path, WorkStation[] workStations, int n)
@@ -117,6 +224,7 @@ public class WorkLoad
         catch (IOException e)
         {
             e.printStackTrace();
+
         }
     }
 
@@ -163,6 +271,7 @@ public class WorkLoad
         return integers;
     }
 
+
     private static int findResult(WorkStation[] workStations, int n)
     {
         int max = workStations[0].getTime().size();
@@ -177,6 +286,7 @@ public class WorkLoad
 //        System.out.println(max);
         return max;
     }
+
 
     private static void printResult(WorkStation[] workStations, int n)
     {
@@ -207,6 +317,7 @@ public class WorkLoad
             }
         }
 
+
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < workStations.length; j++)
@@ -217,6 +328,7 @@ public class WorkLoad
         }
     }
 }
+
 
 class Task
 {
@@ -273,7 +385,7 @@ class Job
         return term;
     }
 
-    public static Job[] sortJob(Job[] inputJobs, int indexWorkStaion)
+    public static Job[] sortJob1(Job[] inputJobs, int indexWorkStaion)
     {
         Job[] jobs = new Job[inputJobs.length];
         for (int i = 0; i < inputJobs.length; i++)
@@ -298,6 +410,37 @@ class Job
                         jobs[j] = jobs[i];
                         jobs[i] = temp;
                     }
+                }
+            }
+        }
+        return jobs;
+    }
+
+    public static Job[] sortJob2(Job[] inputJobs, int indexWorkStaion)
+    {
+        Job[] jobs = new Job[inputJobs.length];
+        for (int i = 0; i < inputJobs.length; i++)
+        {
+            jobs[i] = inputJobs[i];
+        }
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getStartTimeAccess() > jobs[j].getStartTimeAccess())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+                else if (jobs[i].getStartTimeAccess() == jobs[j].getStartTimeAccess())
+                {
+                    if (jobs[i].getTasks()[indexWorkStaion].getDuration() > jobs[j].getTasks()[indexWorkStaion].getDuration())
+                    {
+                        Job temp = jobs[j];
+                        jobs[j] = jobs[i];
+                        jobs[i] = temp;
+                    }
 
                 }
             }
@@ -305,7 +448,7 @@ class Job
         return jobs;
     }
 
-    public static Job[] sortJob2(Job[] jobs, int indexWorkStaion)
+    public static Job[] sortJob3(Job[] jobs, int indexWorkStaion)
     {
         for (int i = 0; i < jobs.length; i++)
         {
@@ -330,6 +473,196 @@ class Job
         }
         return jobs;
     }
+
+    public static Job[] sortJob4(Job[] jobs, int indexWorkStaion)
+    {
+        return jobs;
+    }
+
+
+    public static Job[] sortJob5(Job[] jobs, int indexWorkStaion)
+    {
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getTasks()[indexWorkStaion].getDuration() > jobs[j].getTasks()[indexWorkStaion].getDuration())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+                else if (jobs[i].getTasks()[indexWorkStaion].getDuration() == jobs[j].getTasks()[indexWorkStaion].getDuration())
+                {
+                    if (jobs[i].getStartTimeAccess() > jobs[j].getStartTimeAccess())
+                    {
+                        Job temp = jobs[j];
+                        jobs[j] = jobs[i];
+                        jobs[i] = temp;
+                    }
+                }
+            }
+        }
+        return jobs;
+    }
+
+
+    public static Job[] sortJob6(Job[] inputJobs, int indexWorkStaion)
+    {
+        Job[] jobs = new Job[inputJobs.length];
+        for (int i = 0; i < inputJobs.length; i++)
+        {
+            jobs[i] = inputJobs[i];
+        }
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getStartTimeAccess() < jobs[j].getStartTimeAccess())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+                else if (jobs[i].getStartTimeAccess() == jobs[j].getStartTimeAccess())
+                {
+                    if (jobs[i].getTasks()[indexWorkStaion].getDuration() < jobs[j].getTasks()[indexWorkStaion].getDuration())
+                    {
+                        Job temp = jobs[j];
+                        jobs[j] = jobs[i];
+                        jobs[i] = temp;
+                    }
+                }
+            }
+        }
+        return jobs;
+    }
+
+    public static Job[] sortJob7(Job[] inputJobs, int indexWorkStaion)
+    {
+        Job[] jobs = new Job[inputJobs.length];
+        for (int i = 0; i < inputJobs.length; i++)
+        {
+            jobs[i] = inputJobs[i];
+        }
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getStartTimeAccess() < jobs[j].getStartTimeAccess())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+                else if (jobs[i].getStartTimeAccess() == jobs[j].getStartTimeAccess())
+                {
+                    if (jobs[i].getTasks()[indexWorkStaion].getDuration() > jobs[j].getTasks()[indexWorkStaion].getDuration())
+                    {
+                        Job temp = jobs[j];
+                        jobs[j] = jobs[i];
+                        jobs[i] = temp;
+                    }
+
+                }
+            }
+        }
+        return jobs;
+    }
+
+
+    public static Job[] sortJob8(Job[] jobs, int indexWorkStaion)
+    {
+        Job[] res = new Job[jobs.length];
+        for (int i = 0; i < jobs.length; i++)
+        {
+            res[jobs.length - 1 - i] = jobs[i];
+        }
+        return res;
+    }
+
+
+    public static Job[] sortJob9(Job[] inputJobs, int indexWorkStaion)
+    {
+        Job[] jobs = new Job[inputJobs.length];
+        for (int i = 0; i < inputJobs.length; i++)
+        {
+            jobs[i] = inputJobs[i];
+        }
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getStartTimeAccess() < jobs[j].getStartTimeAccess())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+
+            }
+        }
+        return jobs;
+    }
+
+
+    public static Job[] sortJob10(Job[] inputJobs, int indexWorkStaion)
+    {
+        Job[] jobs = new Job[inputJobs.length];
+        for (int i = 0; i < inputJobs.length; i++)
+        {
+            jobs[i] = inputJobs[i];
+        }
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getStartTimeAccess() > jobs[j].getStartTimeAccess())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+
+            }
+        }
+        return jobs;
+    }
+
+
+    public static Job[] sortJob11(Job[] jobs, int indexWorkStaion)
+    {
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getTasks()[indexWorkStaion].getDuration() > jobs[j].getTasks()[indexWorkStaion].getDuration())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+            }
+        }
+        return jobs;
+    }
+
+    public static Job[] sortJob12(Job[] jobs, int indexWorkStaion)
+    {
+        for (int i = 0; i < jobs.length; i++)
+        {
+            for (int j = i + 1; j < jobs.length; j++)
+            {
+                if (jobs[i].getTasks()[indexWorkStaion].getDuration() < jobs[j].getTasks()[indexWorkStaion].getDuration())
+                {
+                    Job temp = jobs[j];
+                    jobs[j] = jobs[i];
+                    jobs[i] = temp;
+                }
+            }
+        }
+        return jobs;
+    }
 }
 
 class WorkStation
@@ -346,7 +679,7 @@ class WorkStation
         hasDone = false;
     }
 
-    public void insertJob(int indexJob, int duration, int term)
+    public void insertJob(int duration, int term)
     {
         for (int i = 0; i < duration; i++)
         {
@@ -361,6 +694,7 @@ class WorkStation
             }
         }
     }
+
 
     public ArrayList<Integer> getTime()
     {
@@ -382,12 +716,12 @@ class Factory
 {
     private WorkStation[] workStations;
     private Job[][] sortJobs;
-    private int whichMethod;
+    private int witchMehode;
 
-    public Factory(int m, Job[][] jobs, int whichMethod)
+    public Factory(int m, Job[][] jobs, int witchMehode)
     {
         this.sortJobs = jobs;
-        this.whichMethod = whichMethod;
+        this.witchMehode = witchMehode;
         this.workStations = new WorkStation[m];
         for (int i = 0; i < m; i++)
         {
@@ -395,53 +729,92 @@ class Factory
         }
     }
 
-    public WorkStation[] process()
+    public WorkStation[] proccess()
     {
+
+        int skipcounter = 0;
         int counter = 0;
         while (counter <= sortJobs[0].length * workStations.length - 1)
         {
             int indexMin = 0;
-            if (whichMethod == 1)
+            if (witchMehode == 1)
             {
                 indexMin = findMin(workStations);
             }
-            if (whichMethod == 2)
+            if (witchMehode == 2)
             {
                 indexMin = findMin2(workStations);
             }
-            if (whichMethod == 3)
+            if (witchMehode == 3)
             {
                 indexMin = findMin3(workStations);
             }
-            Job[] jobs = sortJobs[indexMin];
-            int availableLastJob = availableJobs(workStations[indexMin], jobs);
-            boolean noJob = true;
-            for (int i = 0; i <= availableLastJob; i++)
+            if (witchMehode == 4)
             {
-                if (!checkConflict(i, jobs, workStations, indexMin, workStations[indexMin].getTime().size()))
+                indexMin = findMin4(workStations);
+            }
+            if (witchMehode == 5)
+            {
+                indexMin = findMin5(workStations);
+            }
+            if (witchMehode == 6)
+            {
+                indexMin = findMin6(workStations);
+            }
+            if (witchMehode == 7)
+            {
+                indexMin = findMin7(workStations);
+            }
+            if (witchMehode == 8)
+            {
+                indexMin = findMin8(workStations);
+            }
+            Job[] jobs = sortJobs[indexMin];
+            ArrayList<Job> availableJobs = availbleJobs(workStations[indexMin], jobs);
+            boolean noJob = true;
+            for (int i = 0; i < availableJobs.size(); i++)
+            {
+                if (!checkConflict(availableJobs.get(i), workStations, indexMin, workStations[indexMin].getTime().size()))
                 {
-                    workStations[indexMin].insertJob(i, jobs[i].getTasks()[indexMin].getDuration(), jobs[i].getTerm());
+                    workStations[indexMin].insertJob(availableJobs.get(i).getTasks()[indexMin].getDuration(), availableJobs.get(i).getTerm());
                     noJob = false;
-                    jobs[i].getTasks()[indexMin].setHasDone(true);
+                    availableJobs.get(i).getTasks()[indexMin].setHasDone(true);
                     counter++;
                     break;
                 }
             }
             if (noJob)
             {
-                workStations[indexMin].insertJob(-1, 1, -1);
+                if (witchMehode == 5 || witchMehode == 6 || witchMehode == 9 || witchMehode == 10)
+                {
+                    skipcounter++;
+                    if (skipcounter == 2)
+                    {
+                        skipcounter = 0;
+                        workStations[indexMin].insertJob(1, -1);
+                    }
+                }
+                else
+                {
+                    workStations[indexMin].insertJob(1, -1);
+                }
+
             }
+
         }
+
+
         return workStations;
     }
 
-    private boolean checkConflict(int jobIndex, Job[] jobs, WorkStation[] workStations, int workStationIndex, int time)
+
+    private boolean checkConflict(Job job, WorkStation[] workStations, int workStationIndex, int time)
     {
         for (int i = 0; i < workStations.length; i++)
         {
             if (i == workStationIndex)
             {
-                if (jobs[jobIndex].getTasks()[workStationIndex].isHasDone())
+                if (job.getTasks()[workStationIndex].isHasDone())
                 {
                     return true;
                 }
@@ -450,10 +823,10 @@ class Factory
             {
                 if (workStations[i].getTime().size() > time)
                 {
-                    int duration = jobs[jobIndex].getTasks()[workStationIndex].getDuration();
+                    int duration = job.getTasks()[workStationIndex].getDuration();
                     for (int i1 = 0; workStations[i].getTime().size() > i1 + time && i1 < duration; i1++)
                     {
-                        if (workStations[i].getTime().get(time + i1) == jobs[jobIndex].getTerm())
+                        if (workStations[i].getTime().get(time + i1) == job.getTerm())
                         {
                             return true;
                         }
@@ -466,16 +839,17 @@ class Factory
         return false;
     }
 
-    private int availableJobs(WorkStation workStation, Job[] jobs)
+    private ArrayList<Job> availbleJobs(WorkStation workStation, Job[] jobs)
     {
+        ArrayList<Job> jobs1 = new ArrayList<>();
         for (int i = 0; i < jobs.length; i++)
         {
-            if (workStation.getTime().size() < jobs[i].getStartTimeAccess())
+            if (workStation.getTime().size() >= jobs[i].getStartTimeAccess())
             {
-                return i - 1;
+                jobs1.add(jobs[i]);
             }
         }
-        return jobs.length - 1;
+        return jobs1;
     }
 
     private int findMin(WorkStation[] workStations)
@@ -491,9 +865,9 @@ class Factory
                 min = temp;
             }
         }
-
         return indexMin;
     }
+
 
     private int findMin2(WorkStation[] workStations)
     {
@@ -522,4 +896,53 @@ class Factory
 
         return i;
     }
+
+    private int findMin4(WorkStation[] workStations)
+    {
+        int i = workStations.length - 1;
+        while (workStations[i].isHasDone())
+        {
+            i--;
+        }
+
+        return i;
+    }
+
+    static int c = -1;
+
+    private int findMin5(WorkStation[] workStations)
+    {
+        c++;
+        return c % workStations.length;
+    }
+
+    static int c2 = -1;
+
+    private int findMin6(WorkStation[] workStations)
+    {
+        c2++;
+        int temp = workStations.length - 1 - (c2 % workStations.length);
+        return temp;
+    }
+
+    private int findMin7(WorkStation[] workStations)
+    {
+        int i = 0;
+        if (workStations[0].isHasDone())
+        {
+            i = findMin(workStations);
+        }
+        return i;
+    }
+
+    private int findMin8(WorkStation[] workStations)
+    {
+        int i = 0;
+        if (workStations[0].isHasDone())
+        {
+            i = findMin2(workStations);
+        }
+        return i;
+    }
+
 }
